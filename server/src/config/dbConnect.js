@@ -9,3 +9,4 @@ const dbConnect=async ()=>{
         process.exit(1);
     }
 }
+export default dbConnect;
