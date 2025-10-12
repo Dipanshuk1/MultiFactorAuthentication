@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register, loginUser } from "../service/authApi";
 
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess }) => {
   const [isRegister, setIsRegister] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,12 +18,14 @@ const LoginForm = () => {
       setMessage(data.message);
       setUsername("");
       setPassword("");
-      navigate("/"); // redirect after login
+      setError("");
+      onLoginSuccess(data);
     } catch (error) {
       console.log("The err is : ", error.message);
       setError("Invalid login credentials");
       setUsername("");
       setPassword("");
+      setMessage("");
     }
   };
 
@@ -33,7 +35,7 @@ const LoginForm = () => {
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
-    }
+    } 
 
     try {
       const { data } = await register(username, password);
@@ -42,11 +44,13 @@ const LoginForm = () => {
       setUsername("");
       setPassword("");
       setConfirmPassword("");
+      setError("");
     } catch (error) {
       console.log("The err is : ", error.message);
       setUsername("");
       setPassword("");
       setConfirmPassword("");
+      setMessage("");
       setError("Something went wrong during user registration");
     }
   };
