@@ -1,75 +1,75 @@
-import React,{ useState} from 'react'
-import { verify2FA } from "../service/authApi";
+import React, { useState } from 'react';
+import { verify2FA, reset2FA } from "../service/authApi";
 
 const TwoFAVerification = ({ onVerifySuccess, onResetSuccess }) => {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
-  const handleTokenVerification = async(e) =>{
+  const handleTokenVerification = async (e) => {
     e.preventDefault();
     try {
-      const {data} = await verify2FA(otp);
+      const { data } = await verify2FA(otp);
       onVerifySuccess(data);
-    } catch (error) {
-       setOtp("");
-       console.log("The err is : ", error.message);
-       setError("Invalid OTP");
+    } catch (err) {
+      setOtp("");
+      console.log("The err is : ", err.message);
+      setError("Invalid OTP");
     }
-  }
-  const handleReset = async() => {
-    try{
-      const {data} =await reset2FA();
+  };
+
+  const handleReset = async () => {
+    try {
+      const { data } = await reset2FA();
       onResetSuccess(data);
-    } catch (error) {
-      console.log("The err is : ", error.message);
-      setError(error.message);
+    } catch (err) {
+      console.log("The err is : ", err.message);
+      setError(err.message);
     }
-  }
+  };
+
   return (
-    <form
-      onSubmit={handleTokenVerification}
-      className="bg-white rounded-lg shadow-md w-full max-w-sm mx-auto"
-    >
-      <div className="pt-6">
-        <h2 className="text-3xl text-center font-extralight">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <form
+        onSubmit={handleTokenVerification}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-6"
+      >
+        <h2 className="text-3xl font-bold text-center text-gray-800">
           Validate TOTP
         </h2>
-      </div>
-      <hr className="text-gray-200 mt-6 mb-6" />
-      <p className="text-center text-gray-600 text-lg font-light">
-        Please enter 6-digit Time based OTP to verify 2FA authentication
-      </p>
-      <div className="p-6">
-        <div className="mb-4">
-          <label className="text-gray-600 text-sm">TOTP</label>
-          <input 
-            label="TOTP"
+        <p className="text-center text-gray-600 text-lg">
+          Enter 6-digit Time-based OTP to verify 2FA authentication
+        </p>
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">TOTP</label>
+          <input
             type="text"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            className="w-full p-2 border rounded mt-2"
             placeholder="Enter Your TOTP"
             required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
           />
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md mb-3"
+          className="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition"
         >
           Verify TOTP
         </button>
         <button
           type="button"
-          className="w-full bg-slate-500 text-white py-2 rounded-md"
+          className="w-full bg-gray-500 text-white py-3 rounded-lg font-medium hover:bg-gray-600 transition"
           onClick={handleReset}
         >
           Reset 2FA
         </button>
-      </div>
-    </form>
-  )
-}
+      </form>
+    </div>
+  );
+};
 
-export default TwoFAVerification
+export default TwoFAVerification;
