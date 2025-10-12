@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Error() {
+const Error = () => {
   return (
     <div>
-      ErrorPage
+      <h1>Error</h1>
     </div>
   )
 }
