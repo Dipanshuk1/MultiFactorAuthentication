@@ -37,6 +37,10 @@ const LoginForm = ({ onLoginSuccess }) => {
     }
     try {
       const { data } = await register(username, password);
+      
+      onLoginSuccess(data); // trigger login success handler in parent
+      navigate(data.isMfaActive ? "/dashboard" : "/setup-mfa");
+
       setIsRegister(false);
       setMessage(data.message);
       setUsername("");

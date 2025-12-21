@@ -15,7 +15,18 @@ export const register = async (req, res) => {
     });
     console.log("New User: ", newUser);
     await newUser.save();
-    res.status(201).json({ message: "User registered Succesfully" });
+    req.login(newUser, (err) => {
+      if (err) return next(err);
+
+      // ✅ User is now logged in automatically (session created)
+      res.status(201).json({
+        message: "User registered and logged in successfully",
+        username: newUser.username,
+        isMfaActive: newUser.isMfaActive,
+      });
+    });
+    //res.status(201).json({ message: "User registered Succesfully" });
+
   } catch (error) {
     res.status(500).json({ error: "Error registering user", message: error });
   }
